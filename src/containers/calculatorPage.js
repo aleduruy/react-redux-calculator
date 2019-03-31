@@ -7,16 +7,62 @@ import CalculatorResult from '../components/calculatorResult';
 import CalculatorRow from '../components/calculatorRow';
 
 class Calculator extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            result: ''
+        }
+        this.setDigit = this.setDigit.bind(this);
+    }
+
+    setDigit(digit) {
+        let formatedResult = `${this.state.result}${digit}`;
+        return this.setState({ result: formatedResult });
+    }
+
+    componentDidMount() {
+        document.getElementById("calculator").addEventListener("click",e => {
+        if (e.target && e.target.matches("div.calculator-digit")) {
+            this.setDigit(e.target.innerHTML);
+            }
+        });
+    }
+
     render() {
         return (
-            <div className="calculator">
+            <div id="calculator" className="calculator">
                 <CalculatorHistory calcs={['220-100','60*50','655+97']} />
-                <CalculatorResult result="122+13" />
-                <CalculatorRow digits={[{digit:'', operator: true}, {digit:'√', operator: true}, {digit:'%', operator: true}, {digit:'×', operator: true}]} />
-                <CalculatorRow digits={[{digit:'1', operator: false}, {digit:'2', operator: false}, {digit:'3', operator: false}, {digit:'÷', operator: true}]} />
-                <CalculatorRow digits={[{digit:'4', operator: false}, {digit:'5', operator: false}, {digit:'6', operator: false}, {digit:'-', operator: true}]} />
-                <CalculatorRow digits={[{digit:'7', operator: false}, {digit:'8', operator: false}, {digit:'9', operator: false}, {digit:'+', operator: true}]} />
-                <CalculatorRow digits={[{digit:'0', operator: false}, {digit:'C', operator: true}, {digit:',', operator: true}, {digit:'=', operator: true}]} />
+                <CalculatorResult result={this.state.result} />
+                <CalculatorRow digits={[
+                    {digit:'', operator: true},
+                    {digit:'√', operator: true},
+                    {digit:'%', operator: true},
+                    {digit:'×', operator: true},
+                ]} />
+                <CalculatorRow digits={[
+                    {digit:'1', operator: false,},
+                    {digit:'2', operator: false},
+                    {digit:'3', operator: false},
+                    {digit:'÷', operator: true},
+                ]} />
+                <CalculatorRow digits={[
+                    {digit:'4', operator: false},
+                    {digit:'5', operator: false},
+                    {digit:'6', operator: false},
+                    {digit:'-', operator: true},
+                ]} />
+                <CalculatorRow digits={[
+                    {digit:'7', operator: false},
+                    {digit:'8', operator: false},
+                    {digit:'9', operator: false},
+                    {digit:'+', operator: true},
+                ]} />
+                <CalculatorRow digits={[
+                    {digit:'0', operator: false},
+                    {digit:'C', operator: true},
+                    {digit:',', operator: true},
+                    {digit:'=', operator: true},
+                ]} />
             </div>
         )
     }
