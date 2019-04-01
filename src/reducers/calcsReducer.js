@@ -5,7 +5,7 @@ const calcsReducer = (state = initialState.calcs, action) => {
         case 'ADD_CALC':
             return [
                 ...state,
-                Object.assign({}, action.calcs)
+                Object.assign({}, action.calc)
             ];
         default:
             return state;

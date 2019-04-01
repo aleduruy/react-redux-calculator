@@ -10,40 +10,84 @@ class Calculator extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            result: ''
+            result: '',
+            calc:[],
         }
-        this.setDigit = this.setDigit.bind(this);
+        this.handleDigit = this.handleDigit.bind(this);
+        this.setResult = this.setResult.bind(this);
     }
 
-    setDigit(digit) {
-        let formatedResult = `${this.state.result}${digit}`;
-        return this.setState({ result: formatedResult });
+    setResult() {
+        if(this.state.calc.length === 0) {
+            return null;
+        }
+        try {
+            eval(this.state.calc.join(''));
+            let result = Object.assign({}, {
+                calc: this.state.calc.join(''),
+              });
+            this.props.actions.addCalc(result);
+            return this.setState({ result: eval(this.state.calc.join('')), calc: [] });
+        } catch (e) {
+            if (e instanceof SyntaxError) {
+                return null;
+            }
+        }
+    }
+
+    handleDigit(digit, display) {
+        let formatedCalc = this.state.calc;
+        switch(digit) {
+            case 'C':
+                return this.setState({ result: '', calc: [] });
+            case '=':
+                return this.setResult();
+            case '√':
+                return null;
+            case ',':
+                return null;
+            case '%':
+                return null;
+            default:
+                if (formatedCalc.length && formatedCalc[formatedCalc.length-1].match(/^[0-9]+$/) && digit.match(/^[0-9]+$/)) {
+                    formatedCalc[formatedCalc.length-1] = `${formatedCalc[formatedCalc.length-1]}${digit}`;
+                } else {
+                    formatedCalc.push(digit);
+                }
+        }
+        return this.setState({ result: formatedCalc.join(''), calc: formatedCalc });
     }
 
     componentDidMount() {
         document.getElementById("calculator").addEventListener("click",e => {
         if (e.target && e.target.matches("div.calculator-digit")) {
-            this.setDigit(e.target.innerHTML);
+            this.handleDigit(e.target.getAttribute('data-digit', e.target.innerHTML));
             }
+        });
+    }
+
+    getPastCalcs() {
+        return this.props.calcs.map(item => {
+            return item.calc;
         });
     }
 
     render() {
         return (
             <div id="calculator" className="calculator">
-                <CalculatorHistory calcs={['220-100','60*50','655+97']} />
+                <CalculatorHistory calcs={this.getPastCalcs()} />
                 <CalculatorResult result={this.state.result} />
                 <CalculatorRow digits={[
-                    {digit:'', operator: true},
-                    {digit:'√', operator: true},
-                    {digit:'%', operator: true},
-                    {digit:'×', operator: true},
+                    {digit:'( )', operator: true, hidden: true},
+                    {digit:'√', operator: true, hidden: true},
+                    {digit:'%', operator: true, hidden: true},
+                    {digit:'*', display:'×', operator: true},
                 ]} />
                 <CalculatorRow digits={[
                     {digit:'1', operator: false,},
                     {digit:'2', operator: false},
                     {digit:'3', operator: false},
-                    {digit:'÷', operator: true},
+                    {digit:'/', display:'÷', operator: true},
                 ]} />
                 <CalculatorRow digits={[
                     {digit:'4', operator: false},
@@ -59,8 +103,8 @@ class Calculator extends React.Component {
                 ]} />
                 <CalculatorRow digits={[
                     {digit:'0', operator: false},
+                    {digit:',', operator: true, hidden: true},
                     {digit:'C', operator: true},
-                    {digit:',', operator: true},
                     {digit:'=', operator: true},
                 ]} />
             </div>

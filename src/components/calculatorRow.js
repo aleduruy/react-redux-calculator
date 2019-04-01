@@ -5,7 +5,9 @@ class CalculatorRow extends React.Component {
         let { digits } = this.props;
     
         return digits.map((item, index) => {
-          return <div key={index} className={`calculator-digit ${item.operator ? 'operator-digit' : ''}`}>{item.digit}</div>;
+          return <div key={index} data-digit={item.digit} className={`calculator-digit ${item.operator ? 'operator-digit' : ''} ${item.hidden ? 'operator-hidden' : ''}`}>
+                    {item.digit}
+                </div>;
         });
       }
 

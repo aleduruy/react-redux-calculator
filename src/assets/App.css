@@ -27,6 +27,7 @@ body {
   display: flex;
   justify-content: flex-end;
   height: 19px;
+  overflow-x: hidden;
 }
 
 .calculator-history-item {
@@ -72,10 +73,21 @@ body {
 }
 
 .calculator-digit:hover {
-  background: #f1f1f1;
+  background: #f5f5f5;
+  box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.15);
 }
 
 .calculator-digit.operator-digit {
   border-color: #4392ff;
   color: #4392ff;
+}
+
+.calculator-digit.operator-hidden {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.calculator-digit.operator-hidden:hover {
+  background: none;
+  box-shadow: none;
 }
